@@ -10,6 +10,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   String _infoText = "Informe seus dados";
@@ -20,6 +23,7 @@ class _HomeState extends State<Home> {
 
     setState(() {
       _infoText = "Informe seus dados";
+      _formKey = GlobalKey<FormState>();
     });
   }
 
@@ -50,65 +54,92 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Calculadora de IMC"),
-          centerTitle: true,
-          backgroundColor: Colors.teal,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: _resetFields,
-            )
-          ],
-        ),
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+      appBar: AppBar(
+        title: Text("Calculadora de IMC"),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _resetFields,
+          )
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-          child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Icon(
-                Icons.person,
-                size: 120.0,
-                color: Colors.teal,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                    labelText: "Peso (Kg)",
-                    labelStyle: TextStyle(color: Colors.teal)),
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 25.0, color: Colors.teal),
-                controller: weightController,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                    labelText: "Altura (Kg)",
-                    labelStyle: TextStyle(color: Colors.teal)),
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 25.0, color: Colors.teal),
-                controller: heightController,
-              ),
-              Container(
-                height: 50.0,
-                margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: RaisedButton(
-                    onPressed: _calculate,
-                    child: Text(
-                      "Calcular",
-                      style: TextStyle(color: Colors.white, fontSize: 25.0),
-                    ),
-                    color: Colors.teal),
-              ),
-              Text(
-                _infoText,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.teal, fontSize: 25.0),
-              )
-            ],
-          ),
-        ));
+          child: Form(
+            key: _formKey,
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Icon(
+                    Icons.account_balance,
+                    size: 100.0,
+                    color: Colors.pink,
+                  ),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                      labelText: "Peso (Kg)",
+                      labelStyle: TextStyle(color: Colors.teal)),
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 25.0, color: Colors.teal),
+                  controller: weightController,
+                  validator: (value) {
+                    if(value.isEmpty){
+                      return "Informe o peso!";
+                    }
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Altura (cm)",
+                    labelStyle: TextStyle(color: Colors.teal),
+                  ),
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 25.0, color: Colors.teal),
+                  controller: heightController,
+                  validator: (value) {
+                    if(value.isEmpty){
+                      return "Informe a altura";
+                    }
+                  },
+                ),
+                Container(
+                  height: 50.0,
+                  margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: RaisedButton(
+                      onPressed: (){
+                        if(_formKey.currentState.validate()){
+                          _calculate();
+                        }
+                      },
+                      child: Text(
+                        "Calcular",
+                        style: TextStyle(color: Colors.white, fontSize: 25.0),
+                      ),
+                      color: Colors.teal),
+                ),
+                Text(
+                  _infoText,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.teal, fontSize: 25.0),
+                )
+              ],
+            ),
+          )),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.pink,
+        child: Container(
+          height: 50.0,
+        ),
+      ),
+    );
   }
 }
