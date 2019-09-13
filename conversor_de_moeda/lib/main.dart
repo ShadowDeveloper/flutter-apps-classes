@@ -12,6 +12,12 @@ void main() async {
 
   runApp(MaterialApp(
     home: Home(),
+    theme: ThemeData(
+        hintColor: Colors.amber,
+        primaryColor: Colors.white,
+        inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white)))),
   ));
 }
 
@@ -21,6 +27,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final realController = TextEditingController();
+  final dollarController = TextEditingController();
+  final euroController = TextEditingController();
+
+  void _realChanged(String text){
+    double real = double.parse(text);
+    dollarController.text = (real/dolar).toStringAsFixed(2);
+    euroController.text = (real/euro).toStringAsFixed(2);
+  }
+
+  void _dollarChanged(String text){
+    double dollar = double.parse(text);
+    realController.text = (dollar * this.dolar).toStringAsFixed(2);
+    euroController.text = (dollar * this.dolar / euro).toStringAsFixed(2);
+  }
+
+  void _euroChanged(String text){
+    double euro = double.parse(text);
+    realController.text = (euro * this.euro).toStringAsFixed(2);
+    dollarController.text = (euro * this.euro / dolar).toStringAsFixed(2);
+    print(text);
+  }
 
   double dolar;
   double euro;
@@ -63,21 +92,25 @@ class _HomeState extends State<Home> {
                   ),
                 );
               } else {
-
                 dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
                 euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
                 return SingleChildScrollView(
-                 child: Column(
-                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                   children: <Widget>[
-                     Icon(
-                         Icons.monetization_on,
-                         size: 150.0, color: Colors.amber
-                     )
-                   ],
-                 ),
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Icon(
+                          Icons.monetization_on,
+                          size: 150.0, color: Colors.amber
+                      ),
+                      buildTextField("Reais", "R\$", realController, _realChanged),
+                      Divider(),
+                      buildTextField("Dólares", "US\$", dollarController, _dollarChanged),
+                      Divider(),
+                      buildTextField("Euros", "€", euroController, _euroChanged),
+                    ],
+                  ),
                 );
-
               }
           }
         },
@@ -89,4 +122,20 @@ class _HomeState extends State<Home> {
 Future<Map> getData() async {
   http.Response response = await http.get(request);
   return json.decode(response.body);
+}
+
+Widget buildTextField(String label, String prefix, TextEditingController c, Function f) {
+  return TextField(
+    controller: c,
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: Colors.amber),
+      border: OutlineInputBorder(),
+      prefixText: prefix,
+      prefixStyle: TextStyle(color: Colors.amber),
+    ),
+    style: TextStyle(color: Colors.amber),
+    onChanged: f,
+    keyboardType: TextInputType.number,
+  );
 }
