@@ -45,6 +45,12 @@ class _HomeState extends State<Home> {
                 )
               ],
             ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                itemBuilder: null
+            ),
           )
         ],
       ),

@@ -1,7 +1,3 @@
-# matraquinha
-
-Matraquinha é um aplicativo destinado para crianças com autismo (TEA) ou que possuam dificuldades verbais. Com a utilização deste aplicativo a criança poderá se comunicar através de cartões.
-
 ## Getting Started
 
 This project is a starting point for a Flutter application.
