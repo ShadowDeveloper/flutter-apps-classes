@@ -14,7 +14,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  @override
+  void initState() {
+    super.initState();
+    _readData().then((data){
+      setState(() {
+        _toDoList = json.decode(data);
+      });
+    });
+  }
+
+  final _todoTextController = TextEditingController();
+
   List _toDoList = [];
+
+  void _addTodo(){
+    setState(() {
+      Map<String, dynamic> newTodo = Map();
+      newTodo["title"] = _todoTextController.text;
+      _todoTextController.text = "";
+      newTodo["ok"] = false;
+      _toDoList.add(newTodo);
+      _saveData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +56,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _todoTextController,
                     decoration: InputDecoration(
                         labelText: "Adicionar tarefa",
                         labelStyle: TextStyle(color: Colors.blueAccent)),
@@ -41,7 +66,7 @@ class _HomeState extends State<Home> {
                   color: Colors.blueAccent,
                   child: Text("ADD"),
                   textColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: _addTodo,
                 )
               ],
             ),
@@ -49,7 +74,24 @@ class _HomeState extends State<Home> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-                itemBuilder: null
+                itemCount: _toDoList.length,
+                itemBuilder: (context, index){
+                return CheckboxListTile(
+                  title: Text(_toDoList[index]["title"]),
+                  value: _toDoList[index]["ok"],
+                  onChanged:(check){
+                    setState(() {
+                      _toDoList[index]["ok"] = check;
+                      _saveData();
+                    });
+                  },
+                  secondary: CircleAvatar(
+                    child: Icon(
+                      _toDoList[index]["ok"] ? Icons.check : Icons.error
+                    ),
+                  ),
+                  );
+                }
             ),
           )
         ],
@@ -77,4 +119,5 @@ class _HomeState extends State<Home> {
       return null;
     }
   }
+
 }
