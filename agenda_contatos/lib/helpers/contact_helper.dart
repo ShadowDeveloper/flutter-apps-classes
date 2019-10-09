@@ -17,7 +17,7 @@ class ContactHelper {
 
   Database _db;
 
-  Future<Database> get db async{
+  Future<Database> get db async {
     if (_db != null) {
       return _db;
     } else {
@@ -36,6 +36,61 @@ class ContactHelper {
           "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, $nomeColumn TEXT, $emailColumn TEXT, $phoneColumn TEXT, $imgColumn TEXT)");
     });
   }
+
+  Future<Contact> saveContact(Contact contact) async {
+    Database dbContact = await db;
+    contact.id = await dbContact.insert(contactTable, contact.toMap());
+    return contact;
+  }
+
+  Future<Contact> getContact(int id) async {
+    Database dbContact = await db;
+    List<Map> maps = await dbContact.query(contactTable,
+        columns: [idColumn, nomeColumn, emailColumn, phoneColumn, imgColumn],
+        where: "$idColumn = ?",
+        whereArgs: [id]);
+
+    if (maps.length > 0) {
+      return Contact.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<int> deleteContact(int id) async {
+    Database dbContact = await db;
+    return await dbContact
+        .delete(contactTable, where: "$idColumn = ?", whereArgs: [id]);
+  }
+
+  Future<int> updateContact(Contact contact) async {
+    Database dbContact = await db;
+    return await dbContact.update(contactTable, contact.toMap(),
+        where: "$idColumn = ? ", whereArgs: [contact.id]);
+  }
+
+  Future<List> getAllContacts() async {
+    Database dbContacts = await db;
+    List listMap = await dbContacts.rawQuery("SELECT *FROM $contactTable");
+    List<Contact> listContact = List();
+    for (Map m in listMap) {
+      listContact.add(Contact.fromMap(m));
+    }
+
+    return listContact;
+  }
+
+  Future<int> getNumber() async {
+    Database dbContacts = await db;
+    return Sqflite.firstIntValue(
+        await dbContacts.rawQuery("SELECT COUNT (*) FROM $contactTable"));
+  }
+
+  Future closeDataBaseConnection() async {
+    Database dbContacts = await db;
+    dbContacts.batch();
+  }
+
 }
 
 class Contact {
