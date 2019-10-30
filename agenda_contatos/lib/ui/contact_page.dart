@@ -21,6 +21,8 @@ class _ContactPageState extends State<ContactPage> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
 
+  final _nameFocus = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +68,7 @@ class _ContactPageState extends State<ContactPage> {
               decoration: InputDecoration(
                 labelText: "Name",
               ),
+              focusNode: _nameFocus,
               onChanged: (String text){
                 _userEdited = true;
                 setState(() {
@@ -99,7 +102,13 @@ class _ContactPageState extends State<ContactPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: (){
+          if(_editedContact.name != null && _editedContact.name.isNotEmpty){
+            Navigator.pop(context, _editedContact);
+          } else {
+            FocusScope.of(context).requestFocus(_nameFocus);
+          }
+        },
         child: Icon(Icons.save),
         backgroundColor: Colors.deepOrange,
       ),

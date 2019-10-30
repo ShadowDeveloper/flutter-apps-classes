@@ -19,12 +19,6 @@ class _HomePageState extends State<HomePage> {
     _getAllContacts();
   }
 
-  void _getAllContacts(){
-    helper.getAllContacts().then((list) {
-      contacts = list;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      contacts[index].name.substring(0,10) ?? "nome vazio",
+                      contacts[index].name ?? "nome vazio",
                       style: TextStyle(
                           fontSize: 22.0, fontWeight: FontWeight.bold),
                     ),
@@ -109,8 +103,17 @@ class _HomePageState extends State<HomePage> {
     if(reqContact != null){
       if(contact != null){
         await helper.updateContact(contact);
-        _getAllContacts();
+      } else {
+        await helper.saveContact(reqContact);
       }
+      _getAllContacts();
     }
   }
+
+  void _getAllContacts(){
+    helper.getAllContacts().then((list) {
+      contacts = list;
+    });
+  }
+
 }
