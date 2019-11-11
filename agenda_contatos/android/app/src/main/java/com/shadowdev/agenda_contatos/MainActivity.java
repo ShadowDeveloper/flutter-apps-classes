@@ -1,4 +1,4 @@
-package br.com.shadowdev.agenda_contatos;
+package com.shadowdev.agenda_contatos;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
