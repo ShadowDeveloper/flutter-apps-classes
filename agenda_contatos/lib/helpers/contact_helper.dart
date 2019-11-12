@@ -10,9 +10,12 @@ final String emailColumn = "emailColumn";
 final String imgColumn = "imgColumn";
 
 class ContactHelper {
+
+  //#region Define a Classe como Singleton, ou seja, toda instancia desta classe irá apontar para uma única chamada da mesma e não criará objetos diferentes em cada chamada
   static final ContactHelper _instance = ContactHelper.internal();
   factory ContactHelper() => _instance;
   ContactHelper.internal();
+  //#endregion
 
   Database _db;
 
@@ -94,6 +97,9 @@ class ContactHelper {
 }
 
 class Contact {
+
+  Contact();
+
   int id;
   String name;
   String phone;
