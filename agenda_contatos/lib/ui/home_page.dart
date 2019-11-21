@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Contatos"),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.orangeAccent,
         centerTitle: true,
       ),
       body: ListView.builder(
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.orangeAccent,
         onPressed: () {},
         child: Icon(Icons.add),
       ),
@@ -71,19 +71,20 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       contacts[index].name ?? "",
                       style: TextStyle(
-                          fontSize: 22.0, fontWeight: FontWeight.bold),
+                          fontSize: 22.0, fontWeight: FontWeight.bold)
                     ),
                     Text(
                       contacts[index].email ?? "",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 18.0)
                     ),
                     Text(
                       contacts[index].phone ?? "",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 18.0)
                     ),
                   ],
                 ),
