@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:agenda_contatos/helpers/contact_helper.dart';
+import 'package:agenda_contatos/ui/contact_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,20 +30,24 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Contatos"),
-        backgroundColor: Colors.orangeAccent,
+        backgroundColor: Colors.deepOrangeAccent,
         centerTitle: true,
+        elevation: 0.0,
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(10.0),
         itemCount: contacts.length,
-        itemBuilder: (context, index) { // Retorna Widget e posicao
-        return _contactCard(context, index);
+        itemBuilder: (context, index) {
+          // Retorna Widget e posicao
+          return _contactCard(context, index);
         },
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orangeAccent,
-        onPressed: () {},
+        backgroundColor: Colors.deepOrangeAccent,
+        onPressed: () {
+          _showContactPage();
+        },
         child: Icon(Icons.add),
       ),
     );
@@ -73,19 +78,13 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      contacts[index].name ?? "",
-                      style: TextStyle(
-                          fontSize: 22.0, fontWeight: FontWeight.bold)
-                    ),
-                    Text(
-                      contacts[index].email ?? "",
-                      style: TextStyle(fontSize: 18.0)
-                    ),
-                    Text(
-                      contacts[index].phone ?? "",
-                      style: TextStyle(fontSize: 18.0)
-                    ),
+                    Text(contacts[index].name ?? "",
+                        style: TextStyle(
+                            fontSize: 22.0, fontWeight: FontWeight.bold)),
+                    Text(contacts[index].email ?? "",
+                        style: TextStyle(fontSize: 18.0)),
+                    Text(contacts[index].phone ?? "",
+                        style: TextStyle(fontSize: 18.0)),
                   ],
                 ),
               )
@@ -94,5 +93,10 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void _showContactPage({Contact contact}) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ContactPage()));
   }
 }

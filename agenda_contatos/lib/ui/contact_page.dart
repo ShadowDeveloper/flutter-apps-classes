@@ -13,6 +13,11 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  bool _userEdited = false;
   Contact _editedContact;
 
   @override
@@ -22,6 +27,9 @@ class _ContactPageState extends State<ContactPage> {
       _editedContact = new Contact();
     } else {
       _editedContact = Contact.fromMap(widget.contact.toMap());
+      _nameController.text = _editedContact.name;
+      _emailController.text = _editedContact.email;
+      _phoneController.text = _editedContact.phone;
     }
   }
 
@@ -29,9 +37,14 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white
+        ),
+        elevation: 0.0,
         title: Text(_editedContact.name ?? "Novo contato"),
-        centerTitle: true,
-        backgroundColor: Colors.orangeAccent,
+        textTheme: TextTheme(),
+        centerTitle: false,
+        backgroundColor: Colors.deepOrangeAccent,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(10.0),
@@ -52,8 +65,33 @@ class _ContactPageState extends State<ContactPage> {
               ),
             ),
             TextField(
+              controller: _nameController,
               decoration: InputDecoration(labelText: "Nome"),
-            )
+              onChanged: (String text) {
+                _userEdited = true;
+                setState(() {
+                  _editedContact.name = text;
+                });
+              },
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: "Email"),
+              onChanged: (String text) {
+                _userEdited = true;
+                _editedContact.email = text;
+              },
+              keyboardType: TextInputType.emailAddress,
+            ),
+            TextField(
+              controller: _phoneController,
+              decoration: InputDecoration(labelText: "Phone"),
+              onChanged: (String text) {
+                _userEdited = true;
+                _editedContact.phone = text;
+              },
+              keyboardType: TextInputType.phone,
+            ),
           ],
         ),
       ),
