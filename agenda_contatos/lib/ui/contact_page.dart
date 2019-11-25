@@ -17,6 +17,8 @@ class _ContactPageState extends State<ContactPage> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
 
+  final _nameFocus = FocusNode();
+
   bool _userEdited = false;
   Contact _editedContact;
 
@@ -37,9 +39,7 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white
-        ),
+        iconTheme: IconThemeData(color: Colors.white),
         elevation: 0.0,
         title: Text(_editedContact.name ?? "Novo contato"),
         textTheme: TextTheme(),
@@ -67,6 +67,7 @@ class _ContactPageState extends State<ContactPage> {
             TextField(
               controller: _nameController,
               decoration: InputDecoration(labelText: "Nome"),
+              focusNode: _nameFocus,
               onChanged: (String text) {
                 _userEdited = true;
                 setState(() {
@@ -96,8 +97,14 @@ class _ContactPageState extends State<ContactPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Colors.orangeAccent,
+        onPressed: () {
+          if (_editedContact.name != null && _editedContact.name.isNotEmpty) {
+            Navigator.pop(context, _editedContact);
+          } else {
+            FocusScope.of(context).requestFocus(_nameFocus);
+          }
+        },
+        backgroundColor: Colors.deepOrange,
         child: Icon(Icons.save, color: Colors.white),
       ),
     );

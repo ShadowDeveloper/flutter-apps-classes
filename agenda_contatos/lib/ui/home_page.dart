@@ -18,11 +18,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    helper.getAllContacts().then((list) {
-      setState(() {
-        contacts = list;
-      });
-    });
+    _getAllContacts();
   }
 
   @override
@@ -55,6 +51,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget _contactCard(BuildContext context, int index) {
     return GestureDetector(
+      onTap: () {
+        _showContactPage(contact: contacts[index]);
+      },
       child: Card(
         child: Padding(
           padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
@@ -95,8 +94,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showContactPage({Contact contact}) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ContactPage()));
+  void _showContactPage({Contact contact}) async {
+    final reqContact = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ContactPage(contact: contact)));
+
+    if(reqContact != null) {
+      if(contact != null) {
+        await helper.updateContact(reqContact);
+      } else {
+        await helper.saveContact(reqContact);
+      }
+      _getAllContacts();
+    }
+  }
+
+  void _getAllContacts() {
+    helper.getAllContacts().then((list) {
+      setState(() {
+        contacts = list;
+      });
+    });
   }
 }
