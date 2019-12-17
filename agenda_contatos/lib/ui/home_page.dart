@@ -51,9 +51,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _contactCard(BuildContext context, int index) {
     return GestureDetector(
-      onTap: () {
-        _showContactPage(contact: contacts[index]);
-      },
       child: Card(
         child: Padding(
           padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
@@ -91,7 +88,49 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      onTap: () {
+        _showOptions(context, index);
+        //_showContactPage(contact: contacts[index]);
+      },
     );
+  }
+
+  _showOptions(BuildContext context, int index) {
+    showBottomSheet(
+      backgroundColor: Colors.white,
+        context: context,
+        builder: (context){
+          return BottomSheet(
+              onClosing: (){},
+              builder: (context){
+                return Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      FlatButton(
+                        child: Text("Ligar",
+                          style: TextStyle(color: Colors.orangeAccent, fontSize: 20.0),),
+                        onPressed: (){},
+                      ),
+                      FlatButton(
+                        child: Text("Ligar",
+                          style: TextStyle(color: Colors.orangeAccent, fontSize: 20.0),),
+                        onPressed: (){},
+                      ),
+                      FlatButton(
+                        child: Text("Ligar",
+                          style: TextStyle(color: Colors.orangeAccent, fontSize: 20.0),),
+                        onPressed: (){},
+                      ),
+                    ],
+                  ),
+                );
+              }
+          );
+        }
+    );
+
   }
 
   void _showContactPage({Contact contact}) async {
