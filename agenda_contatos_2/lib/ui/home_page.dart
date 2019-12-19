@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:agenda_contatos_2/helpers/contact_helper.dart';
 import 'package:agenda_contatos_2/ui/contact_page.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ContactHelper helper =
-  ContactHelper(); // Eu poderia instanciar esta classe mais de uma vez, mas por ser singleton ela aponta somente para um único objeto.
+      ContactHelper(); // Eu poderia instanciar esta classe mais de uma vez, mas por ser singleton ela aponta somente para um único objeto.
 
   List<Contact> contacts = new List();
 
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                       image: contacts[index].img != null &&
-                          contacts[index].img.isNotEmpty
+                              contacts[index].img.isNotEmpty
                           ? FileImage(File(contacts[index].img))
                           : AssetImage("images/user.png"),
                       repeat: ImageRepeat.noRepeat),
@@ -99,38 +100,66 @@ class _HomePageState extends State<HomePage> {
     showBottomSheet(
         backgroundColor: Colors.white,
         context: context,
-        builder: (context){
+        builder: (context) {
           return BottomSheet(
-              onClosing: (){},
-              builder: (context){
+              onClosing: () {},
+              builder: (context) {
                 return Container(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      FlatButton(
-                        child: Text("Ligar",
-                          style: TextStyle(color: Colors.orangeAccent, fontSize: 20.0),),
-                        onPressed: (){},
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
+                        child: FlatButton(
+                          child: Text(
+                            "Ligar",
+                            style: TextStyle(
+                                color: Colors.deepOrangeAccent, fontSize: 20.0),
+                          ),
+                          onPressed: () {
+                            launch("tel:${contacts[index].phone}");
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                      FlatButton(
-                        child: Text("Ligar",
-                          style: TextStyle(color: Colors.orangeAccent, fontSize: 20.0),),
-                        onPressed: (){},
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
+                        child: FlatButton(
+                          child: Text(
+                            "Editar",
+                            style: TextStyle(
+                                color: Colors.deepOrangeAccent, fontSize: 20.0),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _showContactPage(contact: contacts[index]);
+                          },
+                        ),
                       ),
-                      FlatButton(
-                        child: Text("Ligar",
-                          style: TextStyle(color: Colors.orangeAccent, fontSize: 20.0),),
-                        onPressed: (){},
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
+                        child: FlatButton(
+                          child: Text(
+                            "Excluir",
+                            style: TextStyle(
+                                color: Colors.deepOrangeAccent, fontSize: 20.0),
+                          ),
+                          onPressed: () {
+                            helper.deleteContact(contacts[index].id);
+                            setState(() {
+                              contacts.removeAt(index);
+                              Navigator.pop(context);
+                            });
+                          },
+                        ),
                       ),
                     ],
                   ),
                 );
-              }
-          );
-        }
-    );
-
+              });
+        });
   }
 
   void _showContactPage({Contact contact}) async {
