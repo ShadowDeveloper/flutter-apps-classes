@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -9,12 +10,24 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            textTheme: TextTheme(
+              headline6: TextStyle(
+                  color: Colors.deepOrangeAccent,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20.0),
+            ),
+          ),
           //primarySwatch: Colors.blue,
-          primaryColor: Colors.deepOrangeAccent),
+          primaryColor: Colors.white),
       home: MyHomePage(title: 'NewCollector'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -83,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        elevation: 0,
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
